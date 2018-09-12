@@ -1,27 +1,34 @@
 package main
 
 import (
-	"fmt"
-	"io"
-	"log"
 	"net/http"
 
-	"server/middleware"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
 const port = "8080"
 
-func handle(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, fmt.Sprintf("Hello from port %q \n", port))
+type test struct {
+	Ok  string `json:"ok" xml:"ok"`
+	Foo int    `json:"foo" xml:"foo"`
 }
 
-func rootHandler(w http.ResponseWriter, r *http.Request) {
-
-}
-
-// Entry point of the package main
 func main() {
-	// ini dari belakang ke depan
-	http.HandleFunc("/", middleware.Chain(rootHandler, middleware.Logging(), middleware.Auth()))
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	e := echo.New()
+
+	// Middleware
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	// Route => handler
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello, World!\n")
+	})
+	e.POST("/", func(c echo.Context) error {
+		a := test{Ok: "asdf", Foo: 1}
+		return c.JSON(http.StatusOK, a)
+	})
+
+	e.Logger.Fatal(e.Start(":" + port))
 }
