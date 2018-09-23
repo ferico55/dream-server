@@ -2,12 +2,14 @@ package controller
 
 import (
 	"net/http"
+	"server/repository"
 
 	"github.com/labstack/echo"
 )
 
 // GetHandler default template handler example
 func GetHandler(c echo.Context) error {
-	testPackageFunc()
-	return c.String(http.StatusOK, "Hello, World!\n")
+
+	var dreams = repository.GetAllDreams()
+	return c.JSON(http.StatusOK, dreams)
 }
