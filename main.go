@@ -1,34 +1,53 @@
 package main
 
 import (
-	"net/http"
+	"database/sql"
+	"fmt"
 
+	"server/config"
+	"server/controller"
+	localMiddleware "server/middleware"
+
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
 
-const port = "8080"
+var db *sql.DB
+var err error
 
-type test struct {
-	Ok  string `json:"ok" xml:"ok"`
-	Foo int    `json:"foo" xml:"foo"`
+func check(err error) {
+	if err != nil {
+		fmt.Print("ERROR Occured!!!")
+		fmt.Print(err)
+	}
 }
 
 func main() {
 	e := echo.New()
 
+	db, err = sql.Open(config.DriverName, config.ConnectionString)
+	defer db.Close()
+
+	rows, err := db.Query("SELECT title FROM dreams")
+	check(err)
+
+	var s, data string
+	for rows.Next() {
+		err = rows.Scan(&data)
+		check(err)
+		s += data + "\n"
+	}
+
+	fmt.Print(s)
+
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(localMiddleware.ServerHeader)
 
 	// Route => handler
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!\n")
-	})
-	e.POST("/", func(c echo.Context) error {
-		a := test{Ok: "asdf", Foo: 1}
-		return c.JSON(http.StatusOK, a)
-	})
+	e.GET("/", controller.GetHandler)
 
-	e.Logger.Fatal(e.Start(":" + port))
+	e.Logger.Fatal(e.Start(":" + config.Port))
 }
