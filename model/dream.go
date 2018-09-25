@@ -8,3 +8,7 @@ type Dream struct {
 	Description *string `json: description`
 	ImageURI    *string `json: image_uri`
 }
+
+// func CheckPassword(plain string, encrypted string) {
+
+// }
