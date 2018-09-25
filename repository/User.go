@@ -2,11 +2,25 @@ package repository
 
 import "server/model"
 
-func GetUserByEmailAndPassword(email string, password string) *model.User {
+func GetUserByEmail(email string) *model.User {
 	var db = openDBConnection()
 	defer db.Close()
 
-	// var rows, err = db.Query("SELECT id, name, email FROM users WHERE deleted_at IS NULL")
-	// check(err)
+	var stmt, err = db.Prepare("SELECT id, name, email, password FROM users WHERE deleted_at IS NULL AND email = (?)")
+	defer stmt.Close()
+	check(err)
+
+	var row, e = stmt.Query(email)
+	check(e)
+	if row.Next() {
+		var id int
+		var name, email, password *string
+		err = row.Scan(&id, &name, &email, &password)
+		check(err)
+
+		var user = model.User{id, name, email, password}
+		return &user
+	}
+
 	return nil
 }

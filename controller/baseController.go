@@ -11,18 +11,17 @@ func testPackageFunc() {
 }
 
 type responseWrapper struct {
-	success bool        `json: success`
-	error   []string    `json: error`
-	data    interface{} `json: data`
+	Success bool        `json:"success"`
+	Error   *string     `json:"error"`
+	Data    interface{} `json:"data"`
 }
 
-func responseJson(context echo.Context, statusCode int, data interface{}) {
-	// TODO: additional logging or handling here
+func responseJson(context echo.Context, statusCode int, data interface{}) error {
 	var response = responseWrapper{true, nil, data}
-	context.JSON(statusCode, response)
+	return context.JSON(statusCode, response)
 }
 
-func responseError(context echo.Context, statusCode int, errors []string) {
-	var response = responseWrapper{false, errors, nil}
-	context.JSON(statusCode, response)
+func responseError(context echo.Context, statusCode int, e *string) error {
+	var response = responseWrapper{false, e, nil}
+	return context.JSON(statusCode, response)
 }

@@ -2,7 +2,8 @@ package model
 
 // User type declaration
 type User struct {
-	ID    int     `json: id`
-	Name  int     `json: user_id`
-	Email *string `json: title`
+	ID       int     `json:"id"`
+	Name     *string `json:"name"`
+	Email    *string `json:"email"`
+	Password *string
 }
