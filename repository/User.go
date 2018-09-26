@@ -13,7 +13,7 @@ func GetUserByEmail(email string) *model.User {
 	var row, e = stmt.Query(email)
 	check(e)
 	if row.Next() {
-		var id int
+		var id int64
 		var name, email, password *string
 		err = row.Scan(&id, &name, &email, &password)
 		check(err)

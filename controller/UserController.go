@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"server/config"
+	"server/model"
 	"server/repository"
+	"strconv"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
@@ -41,7 +43,7 @@ func LoginHandler(c echo.Context) error {
 		return responseError(c, http.StatusUnauthorized, &e)
 	} else {
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-			"id":    user.ID,
+			"id":    strconv.FormatInt(user.ID, 10),
 			"email": *user.Email,
 			"name":  *user.Name,
 		})
@@ -49,4 +51,14 @@ func LoginHandler(c echo.Context) error {
 
 		return responseJson(c, http.StatusOK, responseStruct{tokenString})
 	}
+}
+
+func GetMeHandler(c echo.Context) error {
+	user := c.Get("user")
+	u, ok := user.(model.User)
+	if !ok {
+		err := "Invalid Request"
+		return responseError(c, http.StatusBadRequest, &err)
+	}
+	return responseJson(c, http.StatusOK, u)
 }
