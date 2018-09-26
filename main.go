@@ -24,7 +24,10 @@ func main() {
 	// e.Group()==
 
 	e.POST("/login", controller.LoginHandler)
+
+	// e.Group("/me/", localMiddleware.AuthMiddleware)
 	e.GET("/me", controller.GetMeHandler, localMiddleware.AuthMiddleware)
+	e.GET("/me/dreams", controller.GetMyDreamHandler, localMiddleware.AuthMiddleware)
 
 	e.Logger.Fatal(e.Start(":" + config.Port))
 }
