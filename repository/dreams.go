@@ -13,6 +13,7 @@ func GetAllDreams() []model.Dream {
 	defer db.Close()
 
 	row, err := db.Query("SELECT id, user_id, title, description, image_uri FROM dreams WHERE deleted_at IS NULL")
+	defer row.Close()
 	check(err)
 
 	var dreams []model.Dream
@@ -62,6 +63,7 @@ func GetMyDreams(uid int) []model.Dream {
 
 	row, err := stmt.Query(uid)
 	check(err)
+	defer row.Close()
 
 	var dreams []model.Dream
 	var dream *model.Dream
@@ -109,6 +111,7 @@ func GetDreamByID(id string) *model.Dream {
 	check(err)
 
 	row, err := stmt.Query(id)
+	defer row.Close()
 	check(err)
 
 	var dream *model.Dream

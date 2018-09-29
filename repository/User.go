@@ -16,6 +16,7 @@ func GetUserByEmail(email string) *model.User {
 	check(err)
 
 	var row, e = stmt.Query(email)
+	defer row.Close()
 	check(e)
 	if row.Next() {
 		var id int64
