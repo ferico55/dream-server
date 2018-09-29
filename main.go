@@ -25,9 +25,12 @@ func main() {
 
 	e.POST("/login", controller.LoginHandler)
 
-	// e.Group("/me/", localMiddleware.AuthMiddleware)
+	// ME GROUP
 	e.GET("/me", controller.GetMeHandler, localMiddleware.AuthMiddleware)
 	e.GET("/me/dreams", controller.GetMyDreamHandler, localMiddleware.AuthMiddleware)
+
+	// DREAM Group
+	e.GET("/dreams/:id", controller.GetDreamByIdHandler, localMiddleware.AuthMiddleware)
 
 	e.Logger.Fatal(e.Start(":" + config.Port))
 }
