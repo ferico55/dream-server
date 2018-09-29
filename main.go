@@ -27,8 +27,8 @@ func main() {
 	e.POST("/register", controller.RegisterHandler)
 
 	// ME GROUP
-	e.GET("/", controller.GetMeHandler, localMiddleware.AuthMiddleware)
-	e.GET("/dreams", controller.GetMyDreamHandler, localMiddleware.AuthMiddleware)
+	e.GET("me/", controller.GetMeHandler, localMiddleware.AuthMiddleware)
+	e.GET("me/dreams", controller.GetMyDreamHandler, localMiddleware.AuthMiddleware)
 
 	// DREAM Group
 	e.GET("/dreams/:id", controller.GetDreamByIdHandler, localMiddleware.AuthMiddleware)
