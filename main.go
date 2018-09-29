@@ -36,6 +36,7 @@ func main() {
 	// TODO Group
 	e.POST("todo/:id/check", controller.CheckTodo, localMiddleware.AuthMiddleware)
 	e.POST("todo/:id/uncheck", controller.UncheckTodo, localMiddleware.AuthMiddleware)
+	e.POST("/dreams/:id/todo", controller.CreateTodoHandler, localMiddleware.AuthMiddleware)
 
 	e.Logger.Fatal(e.Start(":" + config.Port))
 }

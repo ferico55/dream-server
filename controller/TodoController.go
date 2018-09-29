@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"server/model"
@@ -8,6 +9,10 @@ import (
 
 	"github.com/labstack/echo"
 )
+
+type todoRequestStruct struct {
+	Title string `json:"title"`
+}
 
 func CheckTodo(c echo.Context) error {
 	id := c.Param("id")
@@ -53,4 +58,33 @@ func UncheckTodo(c echo.Context) error {
 	}
 
 	return responseJson(c, http.StatusOK, nil)
+}
+
+func CreateTodoHandler(c echo.Context) error {
+	id := c.Param("id")
+
+	user := c.Get("user")
+	u, _ := user.(model.User)
+
+	var decoder = json.NewDecoder(c.Request().Body)
+	var r todoRequestStruct
+	err := decoder.Decode(&r)
+	if err != nil {
+		var e = "Invalid Request Format"
+		return responseError(c, http.StatusUnprocessableEntity, &e)
+	}
+
+	ownerID := repository.GetDreamOwnerID(id)
+	if int64(ownerID) != u.ID {
+		e := "This is not your dream!"
+		return responseError(c, http.StatusForbidden, &e)
+	}
+
+	todoID, err := repository.CreateTodo(r.Title, id)
+	if err != nil {
+		return responseError(c, http.StatusInternalServerError, nil)
+	}
+
+	todo := repository.GetTodoByID(todoID)
+	return responseJson(c, http.StatusCreated, todo)
 }

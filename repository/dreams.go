@@ -150,3 +150,23 @@ func CreateDream(title string, description string, imageURI string, userID int64
 	}
 	return resultedID, err
 }
+
+func GetDreamOwnerID(id string) int {
+	db := openDBConnection()
+	defer db.Close()
+
+	stmt, err := db.Prepare("SELECT user_id FROM dreams WHERE id = (?) AND deleted_at IS NULL")
+	defer stmt.Close()
+	check(err)
+
+	row, err := stmt.Query(id)
+	defer row.Close()
+	check(err)
+
+	var userID int
+	row.Next()
+	err = row.Scan(&userID)
+	check(err)
+
+	return userID
+}
