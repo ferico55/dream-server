@@ -1,12 +1,17 @@
 package repository
 
-import "server/model"
+import (
+	"database/sql"
+	"server/config"
+	"server/model"
+)
 
 func GetUserByEmail(email string) *model.User {
-	var db = openDBConnection()
+	db, err := sql.Open(config.DriverName, config.ConnectionString)
+	check(err)
 	defer db.Close()
 
-	var stmt, err = db.Prepare("SELECT id, name, email, password FROM users WHERE deleted_at IS NULL AND email = (?)")
+	stmt, err := db.Prepare("SELECT id, name, email, password FROM users WHERE deleted_at IS NULL AND email = (?)")
 	defer stmt.Close()
 	check(err)
 
