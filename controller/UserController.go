@@ -14,6 +14,7 @@ import (
 )
 
 type requestStruct struct {
+	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
@@ -61,4 +62,56 @@ func GetMeHandler(c echo.Context) error {
 		return responseError(c, http.StatusBadRequest, &err)
 	}
 	return responseJson(c, http.StatusOK, u)
+}
+
+func RegisterHandler(c echo.Context) error {
+	var decoder = json.NewDecoder(c.Request().Body)
+	var r requestStruct
+	var err = decoder.Decode(&r)
+	if err != nil {
+		var e = "Invalid Request Format"
+		return responseError(c, http.StatusUnprocessableEntity, &e)
+	}
+
+	var isValid = true
+	var e string
+	if r.Email == "" {
+		isValid = false
+		e = "Email Address has to be filled"
+	} else if r.Name == "" {
+		isValid = false
+		e = "Name has to be filled"
+	} else if r.Password == "" {
+		isValid = false
+		e = "Password has to be filled"
+	}
+
+	if !isValid {
+		return responseError(c, http.StatusUnprocessableEntity, &e)
+	}
+
+	checkUser := repository.GetUserByEmail(r.Email)
+	if checkUser != nil {
+		var e = "This email has been registered, please use another email address."
+		return responseError(c, http.StatusUnprocessableEntity, &e)
+	}
+
+	password, err := bcrypt.GenerateFromPassword([]byte(r.Password), 10)
+	passwordString := string(password[:])
+	if err != nil {
+		var e = "Unable to encrypt password"
+		return responseError(c, http.StatusUnprocessableEntity, &e)
+	}
+
+	userID, err := repository.CreateUser(r.Name, r.Email, passwordString)
+	if err != nil {
+		return responseError(c, http.StatusInternalServerError, nil)
+	}
+
+	user := repository.GetUserByID(userID)
+	if user == nil {
+		return responseError(c, http.StatusInternalServerError, nil)
+	}
+
+	return responseJson(c, http.StatusCreated, user)
 }

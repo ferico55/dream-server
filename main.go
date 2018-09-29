@@ -24,6 +24,7 @@ func main() {
 	// e.Group()==
 
 	e.POST("/login", controller.LoginHandler)
+	e.POST("/register", controller.RegisterHandler)
 
 	// ME GROUP
 	e.GET("/", controller.GetMeHandler, localMiddleware.AuthMiddleware)
