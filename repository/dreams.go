@@ -24,8 +24,6 @@ func GetAllDreams() []model.Dream {
 
 		if id == prevID {
 			todo := model.Todo{todoID, *todoTitle, (isChecked == 1)}
-			fmt.Println("asdf")
-			fmt.Println(todo)
 			dream.Todo = append(dream.Todo, todo)
 		} else {
 			if dream != nil {
