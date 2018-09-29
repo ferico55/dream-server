@@ -31,6 +31,7 @@ func main() {
 
 	// DREAM Group
 	e.GET("/dreams/:id", controller.GetDreamByIdHandler, localMiddleware.AuthMiddleware)
+	e.POST("/dreams", controller.CreateDreamHandler, localMiddleware.AuthMiddleware)
 
 	// TODO Group
 	e.POST("todo/:id/check", controller.CheckTodo, localMiddleware.AuthMiddleware)

@@ -134,3 +134,19 @@ func GetDreamByID(id string) *model.Dream {
 
 	return dream
 }
+
+func CreateDream(title string, description string, imageURI string, userID int64) (int64, error) {
+	db := openDBConnection()
+	defer db.Close()
+
+	stmt, err := db.Prepare("INSERT INTO dreams(user_id, title, description, image_uri, created_at, updated_at) VALUES((?), (?), (?), (?), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")
+	defer stmt.Close()
+	check(err)
+
+	result, err := stmt.Exec(userID, title, description, imageURI)
+	var resultedID int64
+	if err == nil {
+		resultedID, err = result.LastInsertId()
+	}
+	return resultedID, err
+}

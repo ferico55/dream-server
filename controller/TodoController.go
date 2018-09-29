@@ -26,8 +26,7 @@ func CheckTodo(c echo.Context) error {
 	err := repository.CheckTodo(id)
 	if err != nil {
 		fmt.Println(err)
-		err := "Something went wrong"
-		return responseError(c, http.StatusInternalServerError, &err)
+		return responseError(c, http.StatusInternalServerError, nil)
 	}
 
 	return responseJson(c, http.StatusOK, nil)
@@ -50,8 +49,7 @@ func UncheckTodo(c echo.Context) error {
 	err := repository.UncheckTodo(id)
 	if err != nil {
 		fmt.Println(err)
-		err := "Something went wrong"
-		return responseError(c, http.StatusInternalServerError, &err)
+		return responseError(c, http.StatusInternalServerError, nil)
 	}
 
 	return responseJson(c, http.StatusOK, nil)

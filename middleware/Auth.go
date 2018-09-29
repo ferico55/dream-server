@@ -39,7 +39,6 @@ func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 
 		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)
-			fmt.Println(claims)
 			var id = claims["id"].(string)
 			var email = claims["email"].(string)
 			var name = claims["name"].(string)

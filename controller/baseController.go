@@ -22,6 +22,10 @@ func responseJson(context echo.Context, statusCode int, data interface{}) error 
 }
 
 func responseError(context echo.Context, statusCode int, e *string) error {
+	if e == nil {
+		err := "Something went wrong with our server, please try again later."
+		e = &err
+	}
 	var response = responseWrapper{false, e, nil}
 	return context.JSON(statusCode, response)
 }
