@@ -39,3 +39,15 @@ func CheckTodo(id string) error {
 	_, err = stmt.Exec(id)
 	return err
 }
+
+func UncheckTodo(id string) error {
+	db := openDBConnection()
+	defer db.Close()
+
+	stmt, err := db.Prepare("UPDATE todos SET is_checked = '0', updated_at = CURRENT_TIMESTAMP WHERE id = (?)")
+	defer stmt.Close()
+	check(err)
+
+	_, err = stmt.Exec(id)
+	return err
+}
