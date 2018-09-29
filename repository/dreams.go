@@ -1,15 +1,12 @@
 package repository
 
 import (
-	"database/sql"
 	"fmt"
-	"server/config"
 	"server/model"
 )
 
 func GetAllDreams() []model.Dream {
-	var db, err = sql.Open(config.DriverName, config.ConnectionString)
-	check(err)
+	db := openDBConnection()
 	defer db.Close()
 
 	row, err := db.Query("SELECT id, user_id, title, description, image_uri FROM dreams WHERE deleted_at IS NULL")
@@ -53,8 +50,7 @@ func GetAllDreams() []model.Dream {
 }
 
 func GetMyDreams(uid int) []model.Dream {
-	db, err := sql.Open(config.DriverName, config.ConnectionString)
-	check(err)
+	db := openDBConnection()
 	defer db.Close()
 
 	stmt, err := db.Prepare("SELECT d.id, d.user_id, d.title, d.description, d.image_uri, t.id AS todo_id, t.title as todo_title, t.is_checked FROM dreams d LEFT JOIN todos t ON d.id = t.dream_id WHERE d.deleted_at IS NULL AND t.deleted_at IS NULL AND user_id = (?)")
@@ -102,8 +98,7 @@ func GetMyDreams(uid int) []model.Dream {
 }
 
 func GetDreamByID(id string) *model.Dream {
-	db, err := sql.Open(config.DriverName, config.ConnectionString)
-	check(err)
+	db := openDBConnection()
 	defer db.Close()
 
 	stmt, err := db.Prepare("SELECT d.id, d.user_id, d.title, d.description, d.image_uri, t.id AS todo_id, t.title as todo_title, t.is_checked FROM dreams d LEFT JOIN todos t ON d.id = t.dream_id WHERE d.deleted_at IS NULL AND t.deleted_at IS NULL AND d.id = (?)")

@@ -26,11 +26,14 @@ func main() {
 	e.POST("/login", controller.LoginHandler)
 
 	// ME GROUP
-	e.GET("/me", controller.GetMeHandler, localMiddleware.AuthMiddleware)
-	e.GET("/me/dreams", controller.GetMyDreamHandler, localMiddleware.AuthMiddleware)
+	e.GET("/", controller.GetMeHandler, localMiddleware.AuthMiddleware)
+	e.GET("/dreams", controller.GetMyDreamHandler, localMiddleware.AuthMiddleware)
 
 	// DREAM Group
 	e.GET("/dreams/:id", controller.GetDreamByIdHandler, localMiddleware.AuthMiddleware)
+
+	// TODO Group
+	e.POST("todo/:id/check", controller.CheckTodo, localMiddleware.AuthMiddleware)
 
 	e.Logger.Fatal(e.Start(":" + config.Port))
 }
