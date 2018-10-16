@@ -14,7 +14,7 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d
   
-  push-tag:
+  tag:
     docker:
       - image: circleci/golang:1.9
 
@@ -40,7 +40,7 @@ workflows:
           type: approval
           requires:
             - release
-      
-      - push-tag:
+
+      - tag:
         requires:
           - hold-push-tag
