@@ -22,8 +22,8 @@ jobs:
     steps:
       - checkout
       - run:
-        name: push new
-        command: git tag new-tag && git push --tags
+          name: push new
+          command: git tag new-tag && git push --tags
 
 
 workflows:
