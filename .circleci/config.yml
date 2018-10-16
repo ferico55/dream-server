@@ -23,7 +23,7 @@ jobs:
       - checkout
       - run:
           name: merge back to develop
-          command: curl -X POST https://api.github.com/repos/tokopedia/ios-tokopedia/pulls -H "Authorization: token 2dd3a0d5677c348c1bb339afe01c24ae9f3f1f7f" -H "Content-Type: application/json" -H "Postman-Token: 20cf6c8f-de67-4481-9827-3b8ab3820471" -H "cache-control: no-cache"
+          command: $createPR
 
 
 workflows:
