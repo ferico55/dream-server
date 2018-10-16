@@ -16,14 +16,14 @@ jobs:
   
   push-tag:
     docker:
-        - image: circleci/golang:1.9
+      - image: circleci/golang:1.9
 
-      working_directory: /go/src/server/
-      steps:
-        - checkout
-        - run:
-          name: push new
-          command: git tag new-tag && git push --tags
+    working_directory: /go/src/server/
+    steps:
+      - checkout
+      - run:
+        name: push new
+        command: git tag new-tag && git push --tags
 
 
 workflows:
