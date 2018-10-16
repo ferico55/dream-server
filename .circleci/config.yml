@@ -35,12 +35,12 @@ workflows:
             branches:
               only:
                 - /release\/.*/
-      
+
       - hold-push-tag:
           type: approval
           requires:
             - release
-
+      
       - push-tag:
         requires:
           - hold-push-tag
