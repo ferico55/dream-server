@@ -23,7 +23,7 @@ jobs:
       - checkout
       - run:
           name: merge back to develop
-          command: bash -c "$createPR"
+          command: bash -c "curl -X POST https://api.github.com/repos/ferico55/dream-server2/pulls -H 'Authorization: token b5f119b3c32766d1731d10e6665ba2b8d1fd6dc7' -H 'Content-Type: application/json' -d '{"title": "Amazing new feature","body": "Please pull this in!","head": "{{ .Branch }}","base": "master"}'"
 
 
 workflows:
