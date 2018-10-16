@@ -23,7 +23,7 @@ jobs:
       - checkout
       - run:
           name: merge back to develop
-          command: $createPR
+          command: bash -c "$createPR"
 
 
 workflows:
