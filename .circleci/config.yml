@@ -13,3 +13,18 @@ jobs:
 
       # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d
+
+workflows:
+  version: 2
+  release-build:
+    jobs:
+      - release:
+          filters:
+            branches:
+              only:
+                - /release\/.*/
+      
+      - hold-push-tag:
+          type: approval
+          requires:
+            - release
