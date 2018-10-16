@@ -12,6 +12,7 @@ import (
 	"github.com/labstack/echo"
 )
 
+// ASD
 func AuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		authHeader := c.Request().Header.Get("authorization")
