@@ -39,5 +39,7 @@ func main() {
 	e.POST("todo/:id/uncheck", controller.UncheckTodo, localMiddleware.AuthMiddleware)
 	e.POST("/dreams/:id/todo", controller.CreateTodoHandler, localMiddleware.AuthMiddleware)
 
+	e.GET("/error", controller.ErrorHandler)
+
 	e.Logger.Fatal(e.Start(":" + config.Port))
 }
